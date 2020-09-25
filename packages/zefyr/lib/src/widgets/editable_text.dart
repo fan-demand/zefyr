@@ -148,13 +148,30 @@ class _ZefyrEditableTextState extends State<ZefyrEditableText>
     _focusAttachment.reparent();
     super.build(context); // See AutomaticKeepAliveState.
 
-    final List<Widget> children = _buildChildren(context);
+    final children = _buildChildren(context);
+    if (document.root.children.first.toPlainText().length <= 1) {
+      children[0] = Stack(
+        children: [
+          Padding(
+            padding: ZefyrTheme.of(context).defaultLineTheme.padding,
+            child: Text(
+              'Text field',
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  .copyWith(color: Theme.of(context).hintColor),
+            ),
+          ),
+          Positioned.fill(
+              left: 0, right: 0, bottom: 0, top: 0, child: children[0]),
+        ],
+      );
+    }
 
     Widget body = FractionallySizedBox(
       widthFactor: 1,
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children.isNotEmpty ? children : Text('Text box')),
+          crossAxisAlignment: CrossAxisAlignment.start, children: children),
     );
     if (widget.padding != null) {
       body = Padding(padding: widget.padding, child: body);
